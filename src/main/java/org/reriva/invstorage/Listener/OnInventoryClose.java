@@ -15,7 +15,7 @@ public class OnInventoryClose implements Listener {
         Player p = (Player) e.getPlayer();
         ArrayList<String> list = InvStorage.receiveTemp(p);
 
-        if (list != null && !list.isEmpty()) {
+        if (list.get(1) != null) {
             if (list.get(1).equals("INVENTORY")) {
                 InvStorage.saveInventory(list.get(0), p.getWorld(), e.getInventory());
             } else if(list.get(1).equals("ENDER_CHEST")) {
