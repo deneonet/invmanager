@@ -1,7 +1,7 @@
 name: InvStorage
 version: '${project.version}'
 main: org.reriva.invstorage.InvStorage
-api-version: 1.19
+api-version: 1.13
 
 commands:
   invsee:
