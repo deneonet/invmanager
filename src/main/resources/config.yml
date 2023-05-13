@@ -1,0 +1,96 @@
+#----------------------------------------------------------------ReRiva's InvStorage----------------------------------------------------------------
+#                                                                    CONFIG HELP
+#
+#   EXPLAINING:
+#     auto_load_inventory_when_joining_server_in_world
+#
+#     If a '*' is set to the list at the first position, then every player that joins the server in every world, get their inventory loaded from that
+#     world, they joined.
+#
+#     EXAMPLE:
+#       E.g.: You have a lobby called "LOBBY" and a survival world called: "SURVIVAL", if you now want that the player loads only their inventory,
+#       saved in the "SURVIVAL" world, when joining the "SURVIVAL" world, then set this:
+#
+#       auto_load_inventory_when_joining_server_in_world: ['SURVIVAL']
+#
+#
+#   EXPLAINING:
+#     auto_save_inventory_when_quitting_server_in_world
+#
+#     If a '*' is set to the list at the first position, then every player that leaves the server in every world, saves their inventory to that world,
+#     they leaved.
+#
+#     EXAMPLE:
+#       E.g.: You have a lobby called "LOBBY" and a survival world called: "SURVIVAL", if you now want that the player saves their inventory only
+#       in the "SURVIVAL" world, when leaving the "SURVIVAL" world, then set this:
+#
+#       auto_save_inventory_when_quitting_server_in_world: ['SURVIVAL']
+#
+#
+#   EXPLAINING:
+#     auto_save_inventory_when_leaving_world
+#
+#     If a '*' is set to the list at the first position, then every player that leaves a world, saves their inventory to that world.
+#
+#     EXAMPLE:
+#       E.g.: You have a lobby called "LOBBY" and a survival world called: "SURVIVAL", if you now want that the player saves their inventory,
+#       when switching to the lobby world called "LOBBY" from the survival world called "SURVIVAL", but not from the "LOBBY" to the "SURVIVAL" world,
+#       then set this:
+#
+#       auto_save_inventory_when_leaving_world: ['SURVIVAL']
+#
+#
+#   EXPLAINING:
+#     auto_load_inventory_when_joining_world
+#
+#     If a '*' is set to the list at the first position, then every player that joins a world, loads their inventory from that world.
+#
+#     EXAMPLE:
+#       E.g.: You have a lobby called "LOBBY" and a survival world called: "SURVIVAL", if you now want that the player loads their inventory,
+#       when switching to the survival called "SURVIVAL" from the lobby world called "LOBBY", but not from the "SURVIVAL" to the "LOBBY" world,
+#       then set this:
+#
+#       auto_load_inventory_when_joining_world: ['SURVIVAL']
+#
+#
+#   auto_load_enderchest_when_joining_server_in_world
+#   auto_save_enderchest_when_quitting_server_in_world
+#   auto_save_enderchest_when_leaving_world
+#   auto_load_enderchest_when_joining_world
+#
+#   are the same as above just with the enderchest instead of the player's inventory
+#
+#
+#
+#   EXPLAINING:
+#     player_exists_not_message
+#
+#     Just a message, that gets send to the player that use the /invsee command, after they enter a target player that doesn't have an inventory
+#     saved in that world.
+#
+#
+#   EXPLAINING:
+#     target_missing_message
+#
+#     Just a message, that gets send to the player that uses a command that requires a target and didn't enter a target player.
+#
+#
+#   EXPLAINING:
+#     missing_permissions
+#
+#     Just a message, that gets send to the player that uses a command with not the required permissions.
+#
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+
+auto_load_inventory_when_joining_server_in_world: ['*']
+auto_save_inventory_when_quitting_server_in_world: ['*']
+auto_save_inventory_when_leaving_world: ['*']
+auto_load_inventory_when_joining_world: ['*']
+auto_load_enderchest_when_joining_server_in_world: ['*']
+auto_save_enderchest_when_quitting_server_in_world: ['*']
+auto_save_enderchest_when_leaving_world: ['*']
+auto_load_enderchest_when_joining_world: ['*']
+player_exists_not_message: "§cThe player has no saved inventory in this world yet.
+  The player needs to join at least once to view the inventory!"
+target_missing_message: "§cPlease specific a target {command} <PLAYER/TARGET>!"
+missing_permissions: "§cSorry, I can't let you use {command}!"
