@@ -225,8 +225,8 @@ public final class InvStorage extends JavaPlugin {
     //
     // ArrayList<IEHelper> ec = InvStorage.receiveEnderChest(p, world);
     // Inventory newEC = Bukkit.createInventory.createInventory(null, InventoryType.ENDER_CHEST);
-    // for (IEHelper iehelper : inv) {
-    //   newEC.setItem(iehelper.index, iehelper.is);
+    // for (IEHelper ieHelper : inv) {
+    //   newEC.setItem(ieHelper.index, ieHelper.is);
     // }
     // p.openInventory(newEC);
 
