@@ -1,6 +1,6 @@
-package org.reriva.invstorage.Utils;
+package org.reeedev.invmanager.Utils;
 
-import org.reriva.invstorage.Classes.IEHelper;
+import org.reeedev.invmanager.Classes.IEHelper;
 
 import java.util.ArrayList;
 

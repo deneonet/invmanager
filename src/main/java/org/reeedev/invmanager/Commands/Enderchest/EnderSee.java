@@ -1,4 +1,4 @@
-package org.reriva.invstorage.Commands.Inventory;
+package org.reeedev.invmanager.Commands.Enderchest;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,28 +10,26 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.reriva.invstorage.Classes.IEHelper;
-import org.reriva.invstorage.InvStorage;
-import org.reriva.invstorage.Utils.ReverseArrayList;
+import org.reeedev.invmanager.InvManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-public class InvSee implements CommandExecutor {
+public class EnderSee implements CommandExecutor {
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
         Player p = (Player) sender;
 
-        if (p.hasPermission("invstorage.invsee")) {
+        if (p.hasPermission("invstorage.endersee")) {
             if (args.length == 1) {
-                if (InvStorage.hasPlayerJoinedOnce(args[0])) {
+                if (InvManager.hasPlayerJoinedOnce(args[0])) {
                     try {
-                        InvStorage.createTemp(p, args[0], "INFORMATION");
+                        InvManager.createTemp(p, args[0], "INFORMATION");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
 
-                    Inventory optionInv = Bukkit.createInventory(null, InventoryType.CHEST, "§7InvSee Options");
+                    Inventory optionInv = Bukkit.createInventory(null, InventoryType.CHEST, "§7EnderSee Options");
 
                     ItemStack analytics = new ItemStack(Material.COMPASS);
                     ItemMeta itemMeta = analytics.getItemMeta();
@@ -51,19 +49,21 @@ public class InvSee implements CommandExecutor {
                     clearInv.setItemMeta(itemMeta3);
                     optionInv.setItem(14, clearInv);
 
-                    ItemStack inventory = new ItemStack(Material.CHEST);
-                    ItemMeta itemMeta4 = inventory.getItemMeta();
-                    itemMeta4.setDisplayName("Inventory");
-                    inventory.setItemMeta(itemMeta4);
-                    optionInv.setItem(16, inventory);
+                    ItemStack enderchest = new ItemStack(Material.ENDER_CHEST);
+                    ItemMeta itemMeta4 = enderchest.getItemMeta();
+                    itemMeta4.setDisplayName("Ender Chest");
+                    enderchest.setItemMeta(itemMeta4);
+                    optionInv.setItem(16, enderchest);
 
                     p.openInventory(optionInv);
+                } else {
+                    p.sendMessage(InvManager.getConfigValue("player_exists_not_message").toString());
                 }
             } else {
-                p.sendMessage(InvStorage.getConfigValue("target_missing_message").toString().replace("{command}", "/invsee"));
+                p.sendMessage(InvManager.getConfigValue("target_missing_message").toString().replace("{command}", "/endersee"));
             }
         } else {
-            p.sendMessage(InvStorage.getConfigValue("missing_permissions").toString().replace("{command}", "/invsee"));
+            p.sendMessage(InvManager.getConfigValue("missing_permissions").toString().replace("{command}", "/endersee"));
         }
 
         return false;

@@ -1,4 +1,4 @@
-package org.reriva.invstorage.Classes;
+package org.reeedev.invmanager.Classes;
 
 import org.bukkit.inventory.ItemStack;
 

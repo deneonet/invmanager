@@ -1,15 +1,15 @@
-package org.reriva.invstorage.Commands;
+package org.reeedev.invmanager.Commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.reriva.invstorage.InvStorage;
+import org.reeedev.invmanager.InvManager;
 
 public class Reload implements CommandExecutor {
-    InvStorage plugin;
+    InvManager plugin;
 
-    public Reload(InvStorage plugin) {
+    public Reload(InvManager plugin) {
         this.plugin = plugin;
     }
 
@@ -21,7 +21,7 @@ public class Reload implements CommandExecutor {
             plugin.reloadConfig();
             p.sendMessage("§cReload complete.");
         } else {
-            p.sendMessage(InvStorage.getConfigValue("missing_permissions").toString().replace("{command}", "/invstoragereload"));
+            p.sendMessage(InvManager.getConfigValue("missing_permissions").toString().replace("{command}", "/invstoragereload"));
         }
         return false;
     }

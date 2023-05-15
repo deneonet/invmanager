@@ -1,4 +1,4 @@
-package org.reriva.invstorage;
+package org.reeedev.invmanager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -8,17 +8,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.reriva.invstorage.Classes.IEHelper;
-import org.reriva.invstorage.Commands.Enderchest.EnderSee;
-import org.reriva.invstorage.Commands.Inventory.InvSee;
-import org.reriva.invstorage.Commands.Reload;
-import org.reriva.invstorage.Listener.*;
+import org.reeedev.invmanager.Listener.*;
+import org.reeedev.invmanager.Classes.IEHelper;
+import org.reeedev.invmanager.Commands.Enderchest.EnderSee;
+import org.reeedev.invmanager.Commands.Inventory.InvSee;
+import org.reeedev.invmanager.Commands.Reload;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public final class InvStorage extends JavaPlugin {
+public final class InvManager extends JavaPlugin {
 
     static String mainPath = "plugins" + File.separator;
     static String InvStoragePath = mainPath + "InvStorage" + File.separator;
@@ -81,7 +81,7 @@ public final class InvStorage extends JavaPlugin {
 
     // Retrieving values from config.yml
     public static Object getConfigValue(String id) {
-        InvStorage plugin = (InvStorage) Bukkit.getPluginManager().getPlugin("InvStorage");
+        InvManager plugin = (InvManager) Bukkit.getPluginManager().getPlugin("InvStorage");
         assert plugin != null;
         return plugin.getConfig().get(id);
     }
@@ -284,8 +284,29 @@ public final class InvStorage extends JavaPlugin {
 
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(dataFile);
         ItemStack is = new ItemStack(Material.AIR);
+        cfg.set(p + "." + world, null);
+        cfg.save(dataFile);
         cfg.set(p.getName() + "." + world + "." + 0, is);
         cfg.set(p.getName() + ".joined", true);
+        cfg.save(dataFile);
+    }
+
+    // Saving an empty inventory to a player as string with a specified world
+    public static void saveEmptyEnderChest(String p, String world) throws IOException {
+        File dataFile = new File(ecFilePath);
+        if (!dataFile.exists()) {
+            if (!dataFile.createNewFile()) {
+                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'EnderChests.yml'!");
+                return;
+            }
+        }
+
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(dataFile);
+        ItemStack is = new ItemStack(Material.AIR);
+        cfg.set(p + "." + world, null);
+        cfg.save(dataFile);
+        cfg.set(p + "." + world + "." + 0, is);
+        cfg.set(p + ".joined", true);
         cfg.save(dataFile);
     }
 

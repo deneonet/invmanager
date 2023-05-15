@@ -1,4 +1,4 @@
-package org.reriva.invstorage.Listener;
+package org.reeedev.invmanager.Listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.reriva.invstorage.Classes.IEHelper;
-import org.reriva.invstorage.InvStorage;
-import org.reriva.invstorage.Utils.ReverseArrayList;
+import org.reeedev.invmanager.InvManager;
+import org.reeedev.invmanager.Classes.IEHelper;
+import org.reeedev.invmanager.Utils.ReverseArrayList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class OnInventoryClick implements Listener {
         Player p = (Player) e.getWhoClicked();
 
         if (e.getView().getTitle().equals("§7InvSee Options") && e.getCurrentItem() != null) {
-            ArrayList<String> temp = InvStorage.receiveTemp(p);
+            ArrayList<String> temp = InvManager.receiveTemp(p);
             e.setCancelled(true);
 
             switch (e.getCurrentItem().getType()) {
@@ -32,11 +32,11 @@ public class OnInventoryClick implements Listener {
                     break;
                 case BARRIER:
                     if (temp.get(1) != null) {
-                        InvStorage.deleteTemp(p);
+                        InvManager.deleteTemp(p);
                         Player target = Bukkit.getPlayer(temp.get(0));
 
                         if (target == null) {
-                            InvStorage.saveEmptyInventory(temp.get(0), p.getWorld().getName());
+                            InvManager.saveEmptyInventory(temp.get(0), p.getWorld().getName());
                         } else {
                             target.getInventory().clear();
                         }
@@ -47,11 +47,11 @@ public class OnInventoryClick implements Listener {
                         Player target = Bukkit.getPlayer(temp.get(0));
 
                         if (target == null) {
-                            InvStorage.deleteTemp(p);
+                            InvManager.deleteTemp(p);
 
                             Inventory customInv = Bukkit.createInventory(null, InventoryType.PLAYER);
 
-                            ArrayList<IEHelper> inv = InvStorage.receiveInventory(temp.get(0), p.getWorld());
+                            ArrayList<IEHelper> inv = InvManager.receiveInventory(temp.get(0), p.getWorld());
 
                             if (inv != null) {
                                 ReverseArrayList revObj = new ReverseArrayList();
@@ -62,7 +62,7 @@ public class OnInventoryClick implements Listener {
                             }
 
                             p.closeInventory();
-                            InvStorage.createTemp(p, temp.get(0), "INVENTORY");
+                            InvManager.createTemp(p, temp.get(0), "INVENTORY");
                             p.openInventory(customInv);
                         } else {
                             p.closeInventory();
@@ -73,7 +73,7 @@ public class OnInventoryClick implements Listener {
             }
         }
         if (e.getView().getTitle().equals("§7EnderSee Options") && e.getCurrentItem() != null) {
-            ArrayList<String> temp = InvStorage.receiveTemp(p);
+            ArrayList<String> temp = InvManager.receiveTemp(p);
             e.setCancelled(true);
 
             switch (e.getCurrentItem().getType()) {
@@ -85,13 +85,13 @@ public class OnInventoryClick implements Listener {
                     break;
                 case BARRIER:
                     if (temp.get(1) != null) {
-                        InvStorage.deleteTemp(p);
+                        InvManager.deleteTemp(p);
                         Player target = Bukkit.getPlayer(temp.get(0));
 
                         if (target == null) {
-                            InvStorage.saveEmptyInventory(temp.get(0), p.getWorld().getName());
+                            InvManager.saveEmptyEnderChest(temp.get(0), p.getWorld().getName());
                         } else {
-                            target.getInventory().clear();
+                            target.getEnderChest().clear();
                         }
                     }
                     break;
@@ -100,11 +100,11 @@ public class OnInventoryClick implements Listener {
                         Player target = Bukkit.getPlayer(temp.get(0));
 
                         if (target == null) {
-                            InvStorage.deleteTemp(p);
+                            InvManager.deleteTemp(p);
 
-                            Inventory customInv = Bukkit.createInventory(null, InventoryType.PLAYER);
+                            Inventory customInv = Bukkit.createInventory(null, InventoryType.ENDER_CHEST);
 
-                            ArrayList<IEHelper> inv = InvStorage.receiveInventory(temp.get(0), p.getWorld());
+                            ArrayList<IEHelper> inv = InvManager.receiveEnderChest(temp.get(0), p.getWorld());
 
                             if (inv != null) {
                                 ReverseArrayList revObj = new ReverseArrayList();
@@ -115,11 +115,11 @@ public class OnInventoryClick implements Listener {
                             }
 
                             p.closeInventory();
-                            InvStorage.createTemp(p, temp.get(0), "INVENTORY");
+                            InvManager.createTemp(p, temp.get(0), "ENDER_CHEST");
                             p.openInventory(customInv);
                         } else {
                             p.closeInventory();
-                            p.openInventory(target.getInventory());
+                            p.openInventory(target.getEnderChest());
                         }
                     }
                     break;
