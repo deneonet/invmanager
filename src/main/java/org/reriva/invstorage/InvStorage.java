@@ -12,10 +12,7 @@ import org.reriva.invstorage.Classes.IEHelper;
 import org.reriva.invstorage.Commands.Enderchest.EnderSee;
 import org.reriva.invstorage.Commands.Inventory.InvSee;
 import org.reriva.invstorage.Commands.Reload;
-import org.reriva.invstorage.Listener.OnInventoryClose;
-import org.reriva.invstorage.Listener.OnJoin;
-import org.reriva.invstorage.Listener.OnPlayerChangedWorld;
-import org.reriva.invstorage.Listener.OnQuit;
+import org.reriva.invstorage.Listener.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +34,7 @@ public final class InvStorage extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new OnQuit(), this);
         Bukkit.getPluginManager().registerEvents(new OnInventoryClose(), this);
         Bukkit.getPluginManager().registerEvents(new OnPlayerChangedWorld(), this);
+        Bukkit.getPluginManager().registerEvents(new OnInventoryClick(), this);
 
         Objects.requireNonNull(getCommand("invsee")).setExecutor(new InvSee());
         Objects.requireNonNull(getCommand("endersee")).setExecutor(new EnderSee());
@@ -145,8 +143,29 @@ public final class InvStorage extends JavaPlugin {
 
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(dataFile);
         ItemStack is = new ItemStack(Material.AIR);
+        cfg.set(p.getName() + "." + world, null);
+        cfg.save(dataFile);
         cfg.set(p.getName() + "." + world + "." + 0, is);
         cfg.set(p.getName() + ".joined", true);
+        cfg.save(dataFile);
+    }
+
+    // Saving an empty inventory to a player as string with a specified world
+    public static void saveEmptyInventory(String p, String world) throws IOException {
+        File dataFile = new File(invFilePath);
+        if (!dataFile.exists()) {
+            if (!dataFile.createNewFile()) {
+                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'Inventories.yml'!");
+                return;
+            }
+        }
+
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(dataFile);
+        ItemStack is = new ItemStack(Material.AIR);
+        cfg.set(p + "." + world, null);
+        cfg.save(dataFile);
+        cfg.set(p + "." + world + "." + 0, is);
+        cfg.set(p + ".joined", true);
         cfg.save(dataFile);
     }
 
