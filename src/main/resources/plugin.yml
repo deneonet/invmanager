@@ -1,13 +1,9 @@
-name: InvStorage
+name: InvManager
 version: '${project.version}'
-main: org.reriva.invstorage.InvStorage
+main: org.reeedev.invmanager.InvManager
 api-version: 1.13
 
 commands:
   invsee:
-  invstoragereload:
   endersee:
-  invshare:
-  endershare:
-  invset:
-  enderset:
+  invstoragereload:
