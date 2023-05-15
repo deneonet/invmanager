@@ -16,12 +16,12 @@ public class Reload implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
         Player p = (Player) sender;
-        if (p.hasPermission("invstorage.reload")) {
+        if (p.hasPermission("invmanager.reload")) {
             p.sendMessage("§cReloading config...");
             plugin.reloadConfig();
             p.sendMessage("§cReload complete.");
         } else {
-            p.sendMessage(InvManager.getConfigValue("missing_permissions").toString().replace("{command}", "/invstoragereload"));
+            p.sendMessage(InvManager.getConfigValue("missing_permissions").toString().replace("{command}", "/invmanagerreload"));
         }
         return false;
     }

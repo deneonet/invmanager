@@ -38,7 +38,7 @@ public final class InvManager extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("invsee")).setExecutor(new InvSee());
         Objects.requireNonNull(getCommand("endersee")).setExecutor(new EnderSee());
-        Objects.requireNonNull(getCommand("invstoragereload")).setExecutor(new Reload(this));
+        Objects.requireNonNull(getCommand("invmanagerreload")).setExecutor(new Reload(this));
     }
     @Override
     public void onDisable() {

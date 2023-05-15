@@ -6,4 +6,4 @@ api-version: 1.13
 commands:
   invsee:
   endersee:
-  invstoragereload:
+  invmanagerreload:

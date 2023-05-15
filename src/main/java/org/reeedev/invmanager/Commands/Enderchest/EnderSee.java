@@ -20,7 +20,7 @@ public class EnderSee implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
         Player p = (Player) sender;
 
-        if (p.hasPermission("invstorage.endersee")) {
+        if (p.hasPermission("invmanager.endersee")) {
             if (args.length == 1) {
                 if (InvManager.hasPlayerJoinedOnce(args[0])) {
                     try {

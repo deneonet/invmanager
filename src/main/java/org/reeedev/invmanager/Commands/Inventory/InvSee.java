@@ -19,7 +19,7 @@ public class InvSee implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
         Player p = (Player) sender;
 
-        if (p.hasPermission("invstorage.invsee")) {
+        if (p.hasPermission("invmanager.invsee")) {
             if (args.length == 1) {
                 if (InvManager.hasPlayerJoinedOnce(args[0])) {
                     try {
