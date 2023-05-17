@@ -24,7 +24,7 @@ public class EnderSee implements CommandExecutor {
             if (args.length == 1) {
                 if (InvManager.hasPlayerJoinedOnce(args[0])) {
                     try {
-                        InvManager.createTemp(p, args[0], "INFORMATION");
+                        InvManager.createTemp(p.getName(), args[0], "INFORMATION");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }

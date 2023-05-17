@@ -10,7 +10,7 @@ import org.reeedev.invmanager.Classes.IEHelper;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class OnPlayerChangedWorld implements Listener {
+public class OnWorldChange implements Listener {
     @EventHandler
     public void Event(PlayerChangedWorldEvent e) throws IOException {
         ArrayList<String> invWorldsLW = (ArrayList<String>) InvManager.getConfigValue("auto_save_inventory_when_leaving_world");

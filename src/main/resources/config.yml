@@ -82,14 +82,28 @@
 #
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
+# Inventory AUTO-LOAD and AUTO-SAVE
+
 auto_load_inventory_when_joining_server_in_world: ['*']
 auto_save_inventory_when_quitting_server_in_world: ['*']
 auto_save_inventory_when_leaving_world: ['*']
 auto_load_inventory_when_joining_world: ['*']
+
+# Ender Chest AUTO-LOAD and AUTO-SAVE
+
 auto_load_enderchest_when_joining_server_in_world: ['*']
 auto_save_enderchest_when_quitting_server_in_world: ['*']
 auto_save_enderchest_when_leaving_world: ['*']
 auto_load_enderchest_when_joining_world: ['*']
+
+# Logs
+
+logs_enabled: true
+# Needs to be a double e.g. 10.0, 20.0, 21.0...
+logs_per_page: 27.0
+
+# Messages
+
 player_exists_not_message: "§cThe player has no saved inventory in this world yet.
   The player needs to join at least once to view the inventory!"
 target_missing_message: "§cPlease specific a target {command} <PLAYER/TARGET>!"

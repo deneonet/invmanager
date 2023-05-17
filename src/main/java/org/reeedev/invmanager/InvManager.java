@@ -4,10 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.reeedev.invmanager.Classes.Log;
+import org.reeedev.invmanager.Classes.TOutput;
 import org.reeedev.invmanager.Listener.*;
 import org.reeedev.invmanager.Classes.IEHelper;
 import org.reeedev.invmanager.Commands.Enderchest.EnderSee;
@@ -21,7 +24,7 @@ import java.util.*;
 public final class InvManager extends JavaPlugin {
 
     static String mainPath = "plugins" + File.separator;
-    static String InvStoragePath = mainPath + "InvStorage" + File.separator;
+    static String InvManagerPath = mainPath + "InvManager" + File.separator;
 
     @Override
     public void onEnable() {
@@ -32,9 +35,12 @@ public final class InvManager extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new OnJoin(), this);
         Bukkit.getPluginManager().registerEvents(new OnQuit(), this);
-        Bukkit.getPluginManager().registerEvents(new OnInventoryClose(), this);
-        Bukkit.getPluginManager().registerEvents(new OnPlayerChangedWorld(), this);
-        Bukkit.getPluginManager().registerEvents(new OnInventoryClick(), this);
+        Bukkit.getPluginManager().registerEvents(new OnInvClose(), this);
+        Bukkit.getPluginManager().registerEvents(new OnWorldChange(), this);
+        Bukkit.getPluginManager().registerEvents(new OnInvClick(), this);
+        Bukkit.getPluginManager().registerEvents(new OnPickUp(), this);
+        Bukkit.getPluginManager().registerEvents(new OnDrop(), this);
+        Bukkit.getPluginManager().registerEvents(new OnDespawn(), this);
 
         Objects.requireNonNull(getCommand("invsee")).setExecutor(new InvSee());
         Objects.requireNonNull(getCommand("endersee")).setExecutor(new EnderSee());
@@ -45,9 +51,23 @@ public final class InvManager extends JavaPlugin {
         // Plugin shutdown logic
     }
 
+    static String logFilePath = InvManagerPath + "Logs" + File.separator;
+
     // Creating config.yml file, if needed
     public void Init() {
         saveDefaultConfig();
+
+        ConfigurationSerialization.registerClass(Log.class);
+
+        File logFolder = new File(logFilePath);
+
+        if (!logFolder.exists()) {
+            if (!logFolder.mkdir()) {
+                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a folder in 'plugins/InvManager' called 'Logs'!");
+                return;
+            }
+        }
+
         Bukkit.getLogger().info("Successfully started...");
     }
 
@@ -81,13 +101,13 @@ public final class InvManager extends JavaPlugin {
 
     // Retrieving values from config.yml
     public static Object getConfigValue(String id) {
-        InvManager plugin = (InvManager) Bukkit.getPluginManager().getPlugin("InvStorage");
+        InvManager plugin = (InvManager) Bukkit.getPluginManager().getPlugin("InvManager");
         assert plugin != null;
         return plugin.getConfig().get(id);
     }
 
-    static String invFilePath = InvStoragePath + "Inventories.yml";
-    static String ecFilePath = InvStoragePath + "EnderChests.yml";
+    static String invFilePath = InvManagerPath + "Inventories.yml";
+    static String ecFilePath = InvManagerPath + "EnderChests.yml";
 
     // Returning true if the player joined at least once, otherwise false
     public static boolean hasPlayerJoinedOnce(String p) {
@@ -98,11 +118,11 @@ public final class InvManager extends JavaPlugin {
 
     // CODE EXAMPLE:
     //
-    // ArrayList<IEHelper> inv = InvStorage.receiveInventory(p, world);
+    // ArrayList<IEHelper> inv = InvManager.receiveInventory(p, world);
     //
     // SETTING THE LIST TO A INVENTORY:
     //
-    // ArrayList<IEHelper> inv = InvStorage.receiveInventory(p, world);
+    // ArrayList<IEHelper> inv = InvManager.receiveInventory(p, world);
     // Inventory newInv = Bukkit.createInventory.createInventory(null, InventoryType.PLAYER);
     // for (IEHelper ieHelper : inv) {
     //   newInv.setItem(ieHelper.index, ieHelper.is);
@@ -136,7 +156,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(invFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'Inventories.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'Inventories.yml'!");
                 return;
             }
         }
@@ -155,7 +175,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(invFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'Inventories.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'Inventories.yml'!");
                 return;
             }
         }
@@ -173,7 +193,7 @@ public final class InvManager extends JavaPlugin {
     // CODE EXAMPLE:
     //
     // try {
-    //   InvStorage.saveInventory(p (REQUIRED), world (OPTIONAL), inv (OPTIONAL));
+    //   InvManager.saveInventory(p (REQUIRED), world (OPTIONAL), inv (OPTIONAL));
     // } catch (IOException e) {
     //   throw new RuntimeException(e);
     // }
@@ -183,7 +203,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(invFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'Inventories.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'Inventories.yml'!");
                 return;
             }
         }
@@ -202,7 +222,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(invFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'Inventories.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'Inventories.yml'!");
                 return;
             }
         }
@@ -221,7 +241,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(invFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'Inventories.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'Inventories.yml'!");
                 return;
             }
         }
@@ -238,11 +258,11 @@ public final class InvManager extends JavaPlugin {
 
     // CODE EXAMPLE:
     //
-    // ArrayList<IEHelper> ec = InvStorage.receiveEnderChest(p, world);
+    // ArrayList<IEHelper> ec = InvManager.receiveEnderChest(p, world);
     //
     // SETTING THE LIST TO A INVENTORY:
     //
-    // ArrayList<IEHelper> ec = InvStorage.receiveEnderChest(p, world);
+    // ArrayList<IEHelper> ec = InvManager.receiveEnderChest(p, world);
     // Inventory newEC = Bukkit.createInventory.createInventory(null, InventoryType.ENDER_CHEST);
     // for (IEHelper ieHelper : inv) {
     //   newEC.setItem(ieHelper.index, ieHelper.is);
@@ -277,7 +297,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(ecFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'EnderChests.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'EnderChests.yml'!");
                 return;
             }
         }
@@ -296,7 +316,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(ecFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'EnderChests.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'EnderChests.yml'!");
                 return;
             }
         }
@@ -314,7 +334,7 @@ public final class InvManager extends JavaPlugin {
     // CODE EXAMPLE:
     //
     // try {
-    //   InvStorage.saveEnderChest(p (REQUIRED), world (OPTIONAL), inv (OPTIONAL));
+    //   InvManager.saveEnderChest(p (REQUIRED), world (OPTIONAL), inv (OPTIONAL));
     // } catch (IOException e) {
     //   throw new RuntimeException(e);
     // }
@@ -324,7 +344,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(ecFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'EnderChests.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'EnderChests.yml'!");
                 return;
             }
         }
@@ -343,7 +363,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(ecFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'EnderChests.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'EnderChests.yml'!");
                 return;
             }
         }
@@ -362,7 +382,7 @@ public final class InvManager extends JavaPlugin {
         File dataFile = new File(ecFilePath);
         if (!dataFile.exists()) {
             if (!dataFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'EnderChests.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'EnderChests.yml'!");
                 return;
             }
         }
@@ -376,34 +396,82 @@ public final class InvManager extends JavaPlugin {
         cfg.save(dataFile);
     }
 
-    static String tempFilePath = InvStoragePath + "Temp.yml";
+    static String tempFilePath = InvManagerPath + "Temp.yml";
 
     // Methods for commands
-    public static void createTemp(Player p, String target, String type) throws IOException {
+    public static void createTemp(String key, String value, String extra) throws IOException {
         File tempFile = new File(tempFilePath);
         if (!tempFile.exists()) {
             if (!tempFile.createNewFile()) {
-                Bukkit.getLogger().warning("INVSTORAGE: Couldn't create a yml file in 'plugins/InvStorage' called 'Temp.yml'!");
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager' called 'Temp.yml'!");
                 return;
             }
         }
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(tempFile);
-        cfg.set(p.getName() + ".target", target);
-        cfg.set(p.getName() + ".type", type);
+        cfg.set(key + ".value", value);
+        cfg.set(key + ".extra", extra);
         cfg.save(tempFile);
     }
-    public static ArrayList<String> receiveTemp(Player p) {
+    public static TOutput receiveTemp(String key) {
         File tempFile = new File(tempFilePath);
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(tempFile);
-        ArrayList<String> list = new ArrayList<>();
-        list.add(cfg.getString(p.getName() + ".target"));
-        list.add(cfg.getString(p.getName() + ".type"));
-        return list;
+        TOutput tOut = new TOutput();
+        tOut.key = key;
+        tOut.value = cfg.get(key + ".value");
+        tOut.extra = cfg.getString(key + ".extra");
+        return tOut;
     }
-    public static void deleteTemp(Player p) throws IOException {
+    public static void deleteTemp(String key) throws IOException {
         File tempFile = new File(tempFilePath);
         YamlConfiguration cfg = YamlConfiguration.loadConfiguration(tempFile);
-        cfg.set(p.getName(), null);
+        cfg.set(key, null);
         cfg.save(tempFile);
+    }
+
+    // Creates a log when a player picked up an item
+    public static void createLog(String p, Log log) throws IOException {
+        File logFile = new File(logFilePath + p + ".yml");
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(logFile);
+
+        if (!logFile.exists()) {
+            if (!logFile.createNewFile()) {
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager/Logs' called '" + p + ".yml'!");
+                return;
+            }
+        }
+
+        List<Log> logs = (List<Log>) cfg.getList("Logs");
+        if (logs == null) logs = new ArrayList<>();
+        logs.add(log);
+
+        cfg.set("Logs", logs);
+        cfg.save(logFile);
+    }
+
+    // Receives a log from a player
+    public static List<Log> receiveLog(String p) throws IOException {
+        File logFile = new File(logFilePath + p + ".yml");
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(logFile);
+
+        if (!logFile.exists()) {
+            if (!logFile.createNewFile()) {
+                Bukkit.getLogger().warning("InvManager: Couldn't create a yml file in 'plugins/InvManager/Logs' called '" + p + ".yml'!");
+                return new ArrayList<>();
+            }
+        }
+
+        List<Log> logs = (List<Log>) cfg.getList("Logs");
+        if (logs == null) logs = new ArrayList<>();
+
+        return logs;
+    }
+
+    // Deletes a log from a player
+    public static void deleteLog(String p) throws IOException {
+        File logFile = new File(logFilePath + p + ".yml");
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(logFile);
+
+        cfg.set("Logs", null);
+        cfg.save(logFile);
     }
 }
